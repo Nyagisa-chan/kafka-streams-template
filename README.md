@@ -21,7 +21,9 @@ Each honeypot writes captured event data to a dedicated Kafka topic. Below is a 
 | Honeytrap    | `input.honeypot.honeytrap`   | `output.honeypot.honeytrap`            |
 | RDPY         | `input.honeypot.rdpy`        | `output.honeypot.rdpy`                 |
 
-Additional honeypots or topics can be added by modifying the stream topology in the source code.
+Additional honeypots or topics can be added by modifying the stream topology in the source code. Each honeypot writes a filtered event data to a dedicated filter topic that will not do anything.
+
+Filter topic: `filter-topic`
 
 ---
 
