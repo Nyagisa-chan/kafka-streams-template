@@ -63,6 +63,9 @@ cd kafka-streams-template/kafka-streams-template
 ### Edit the Topics
 go to `/kafka-streams-template/src/main/java/com/honeypie/app/<honeypot_name>StreamProcessor`
 
+## Run Zookeeper and Kafka
+Make sure zookeeper and kafka is running before running the project
+
 ### Build the Project
 ```
 mvn clean install
