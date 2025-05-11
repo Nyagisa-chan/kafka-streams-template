@@ -1,9 +1,9 @@
 # kafka-streams-template
-🛰️ Kafka Streams Template for Honeypot Integration
+🛰️ Kafka Streams Template for Transporting and Preprocessing Honeypot Logs
 
 ## 🧠 Introduction
 
-This project serves as a Kafka Streams template for data preprocessing  from various honeypots. It is designed to provide real-time data cleansing, filtering, and standardizing event data before forwarding it to MongoDB sinks.
+This project serves as a Kafka Streams template for data transport and preprocessing from various honeypots. It is designed to provide real-time data cleansing, filtering, and standardizing event data before forwarding it to MongoDB sinks.
 
 ---
 
