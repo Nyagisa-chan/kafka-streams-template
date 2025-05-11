@@ -38,11 +38,7 @@ Filter topic: `filter-topic`
 │       ├── DionaeaEwsStreamProcessor.java
 │       ├── ElasticpotStreamProcessor.java
 │       ├── HoneytrapStreamProcessor.java
-│       ├── RdpyStreamProcessor.java
-│       └── StreamTopology.java
-├── resources/
-│   └── application.properties
-├── docker-compose.yml
+│       └── RdpyStreamProcessor.java
 └── README.md
 ```
 
@@ -65,7 +61,7 @@ cd kafka-streams-template/kafka-streams-template
 ```
 
 ### Edit the Topics
-TODO: place to edit the topics
+go to `/kafka-streams-template/src/main/java/com/honeypie/app/<honeypot_name>StreamProcessor`
 
 ### Build the Project
 ```
@@ -73,5 +69,6 @@ mvn clean install
 ```
 
 ### Run the Project
-java -jar target/kafka-honeypot-streams-1.0.jar
-
+```
+java -jar target/<honeypot_name>
+```
