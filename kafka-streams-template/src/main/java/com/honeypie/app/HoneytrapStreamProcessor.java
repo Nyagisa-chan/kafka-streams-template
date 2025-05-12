@@ -27,6 +27,17 @@ public class HoneytrapStreamProcessor {
         }
     }
 
+    private static boolean notError(String raw) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(raw);
+            String category = root.get("category").asText();
+            return category != null && !category.isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     public static void main(String[] args) {
         // 1. Configure Streams
@@ -99,7 +110,7 @@ public class HoneytrapStreamProcessor {
             } catch (Exception e) {
                 return raw;
             }
-        }).to((key, value, recordContext) -> hasValidSrcIp(value) ? OUTPUT_TOPIC : FILTER_TOPIC);
+        }).to((key, value, recordContext) -> hasValidSrcIp(value) && notError(value) ? OUTPUT_TOPIC : FILTER_TOPIC);
 
 
         // 3. Start Streams
