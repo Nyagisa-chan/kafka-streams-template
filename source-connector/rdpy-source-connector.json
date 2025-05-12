@@ -1,0 +1,27 @@
+{
+  "name": "rdpy-source-connector",
+  "config": {
+    "connector.class": "com.mongodb.kafka.connect.MongoSourceConnector",
+    "tasks.max": "1",
+    "connection.uri": "mongodb://<user>:<pass>@<host1>:27017,<host2>:27017,<host3>:27017/?authSource=honeypot",
+    "database": "honeypot",
+    "collection": "rdpy",
+    "copy.existing": "true",
+    "publish.full.document.only": "true",
+    "topic.prefix": "input",
+    "output.format.value": "json",
+    "output.schema.infer.value": "true",
+    "pipeline":
+        "[{\"$match\":{
+          \"operationType\":\"insert\"}},
+        {\"$addFields\":{
+          \"fullDocument.dst_ip\": \"1.1.1.1\",
+          \"fullDocument.src_ip\": \"$fullDocument.ip_address\",
+          \"fullDocument.dst_port\": \"3389\",
+          \"fullDocument.src_port\": \"$fullDocument.source_port\"}},
+        {\"$project\": {
+          \"fullDocument.ip_address\":0,
+          \"fullDocument.source_port\":0}}]",
+    "producer.override.max.request.size": "10485760"
+  }
+}

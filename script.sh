@@ -1,0 +1,14 @@
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic input.honeypot.conpot --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic output.honeypot.conpot --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic input.honeypot.cowrie --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic output.honeypot.cowrie --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic input.honeypot.dionaea --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic output.honeypot.dionaea --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic input.honeypot.dionaea_ews --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic output.honeypot.dionaea_ews --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic input.honeypot.elasticpot --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic output.honeypot.elasticpot --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic input.honeypot.honeytrap --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic output.honeypot.honeytrap --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic input.honeypot.rdpy --bootstrap-server localhost:9092
+./../kafka_2.13-3.7.0/bin/kafka-topics.sh --create --topic output.honeypot.rdpy --bootstrap-server localhost:9092

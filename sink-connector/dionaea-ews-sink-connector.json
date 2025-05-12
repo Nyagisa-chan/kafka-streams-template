@@ -1,0 +1,11 @@
+{
+  "name": "dionaea-ews-sink-connector",
+  "config": {
+    "connector.class": "com.mongodb.kafka.connect.MongoSinkConnector",
+    "tasks.max": "1",
+    "topics": "output.honeypot.dionaea_ews",
+    "connection.uri": "mongodb://<host1>:27017,<host2>:27017,<host3>:27017/?replicaSet=mainRepo",
+    "database": "honeypot",
+    "collection": "dionaea_ews"
+  }
+}

@@ -3,7 +3,7 @@
 
 ## 🧠 Introduction
 
-This project serves as a Kafka Streams template for data transport and preprocessing from various honeypots. It is designed to provide real-time data cleansing, filtering, and standardizing event data before forwarding it to MongoDB sinks.
+This project serves as a Kafka Streams template for data transport and preprocessing from mongoDB for various honeypot. It is designed to provide real-time data cleansing, filtering, and standardizing event data before forwarding it to MongoDB sinks.
 
 ---
 
@@ -61,7 +61,9 @@ cd kafka-streams-template/kafka-streams-template
 ```
 
 ### Edit the Topics
-go to `/kafka-streams-template/src/main/java/com/honeypie/app/<honeypot_name>StreamProcessor`
+1. go to `/kafka-streams-template/src/main/java/com/honeypie/app/<honeypot_name>StreamProcessor`
+2. Edit the input and output topic based on your needs
+3. Depending on your needs, you may need to edit your source & sink connector
 
 ## Run Zookeeper and Kafka
 Make sure zookeeper and kafka is running before running the project

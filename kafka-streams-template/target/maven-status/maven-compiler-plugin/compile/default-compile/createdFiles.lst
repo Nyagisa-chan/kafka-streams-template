@@ -1,0 +1,7 @@
+com\honeypie\app\ElasticpotStreamProcessor.class
+com\honeypie\app\DionaeaStreamProcessor.class
+com\honeypie\app\ConpotStreamProcessor.class
+com\honeypie\app\DionaeaEwsStreamProcessor.class
+com\honeypie\app\HoneytrapStreamProcessor.class
+com\honeypie\app\RdpyStreamProcessor.class
+com\honeypie\app\CowrieStreamProcessor.class
