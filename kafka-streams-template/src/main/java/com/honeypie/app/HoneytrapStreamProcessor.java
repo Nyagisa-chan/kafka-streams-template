@@ -15,24 +15,13 @@ public class HoneytrapStreamProcessor {
     static String INPUT_TOPIC = "input.honeypot.honeytrap";
     static String OUTPUT_TOPIC = "output.honeypot.honeytrap";
     static String FILTER_TOPIC = "filter-topic";
-   
-    private static boolean hasValidSrcIp(String raw) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(raw);
-            String srcIp = root.get("src_ip").asText();
-            return srcIp != null && !srcIp.isEmpty();
-        } catch (Exception e) {
-            return false;
-        }
-    }
 
-    private static boolean notError(String raw) {
+    private static boolean validLogs(String raw) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(raw);
             String category = root.get("category").asText();
-            return category != null && !category.isEmpty();
+            return category != null && !category.isEmpty() && !category.equals("heartbeat");
         } catch (Exception e) {
             return false;
         }
@@ -72,26 +61,28 @@ public class HoneytrapStreamProcessor {
             try {
                 // deserialize the JSON string to a JsonNode object
                 // to support "{\"\"key\":\"value\"}" format
+                // add new fields and delete old ones if exists
                 String unescaped = mapper.readValue(raw, String.class);
                 JsonNode root = mapper.readTree(unescaped); // Parse JSON  
-                String dstIp = root.get("dst_ip").asText(); // Extract fields
-                if (dstIp.startsWith("::ffff:")) {
-                    String ipv4 = dstIp.replaceFirst("^::ffff:", "");
-                    ((ObjectNode) root).put("dst_ip", ipv4);//Update JSON tree
-                }
-                return mapper.writeValueAsString(root); // Serialize back to string
-            } catch (Exception e) {
-                return raw;
-            }
-        }).mapValues(raw -> {
-            try {
-                // String unescaped = mapper.readValue(raw, String.class);
-                JsonNode root = mapper.readTree(raw); // Parse JSON  
-                String srcIp = root.get("src_ip").asText(); // Extract fields
-                if (srcIp.startsWith("::ffff:")) {
-                    String ipv4 = srcIp.replaceFirst("^::ffff:", "");
-                    ((ObjectNode) root).put("src_ip", ipv4);//Update JSON tree
-                }
+
+                // Extract fields
+                String dstIp = root.get("destination-ip").asText();
+                String dstPort = root.get("destination-port").asText();
+                String srcIp = root.get("source-ip").asText();
+                String srcPort = root.get("source-port").asText();
+
+                // Add fields
+                ((ObjectNode) root).put("dst_ip", dstIp);
+                ((ObjectNode) root).put("dst_port", dstPort);
+                ((ObjectNode) root).put("src_ip", srcIp);
+                ((ObjectNode) root).put("src_port", srcPort);
+
+                // Remove fields
+                ((ObjectNode) root).remove("destination-ip");
+                ((ObjectNode) root).remove("destination-port");
+                ((ObjectNode) root).remove("source-ip");
+                ((ObjectNode) root).remove("source-port");
+
                 return mapper.writeValueAsString(root); // Serialize back to string
             } catch (Exception e) {
                 return raw;
@@ -110,7 +101,7 @@ public class HoneytrapStreamProcessor {
             } catch (Exception e) {
                 return raw;
             }
-        }).to((key, value, recordContext) -> hasValidSrcIp(value) && notError(value) ? OUTPUT_TOPIC : FILTER_TOPIC);
+        }).to((key, value, recordContext) -> validLogs(value) ? OUTPUT_TOPIC : FILTER_TOPIC);
 
 
         // 3. Start Streams

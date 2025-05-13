@@ -15,13 +15,13 @@
         "[{\"$match\":{
           \"operationType\":\"insert\"}},
         {\"$addFields\":{
-          \"fullDocument.dst_ip\": \"$fullDocument.internalIP\",
-          \"fullDocument.src_ip\": \"$fullDocument.externalIP\",
+          \"fullDocument.dst_ip\": \"$fullDocument.target_address\",
+          \"fullDocument.src_ip\": \"$fullDocument.source_address\",
           \"fullDocument.dst_port\": \"$fullDocument.target_port\",
           \"fullDocument.src_port\": \"$fullDocument.source_port\"}},
         {\"$project\": {
-          \"fullDocument.internalIP\":0,
-          \"fullDocument.externalIP\":0,
+          \"fullDocument.target_address\":0,
+          \"fullDocument.source_address\":0,
           \"fullDocument.target_port\":0,
           \"fullDocument.source_port\":0}}]",
     "producer.override.max.request.size": "10485760"
