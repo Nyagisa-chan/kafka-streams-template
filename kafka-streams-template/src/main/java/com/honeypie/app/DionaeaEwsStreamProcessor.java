@@ -1,15 +1,16 @@
 package com.honeypie.app;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.Properties;
+
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 
-import java.util.Properties;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class DionaeaEwsStreamProcessor {
     static String INPUT_TOPIC = "input.honeypot.dionaea_ews";
@@ -96,6 +97,55 @@ public class DionaeaEwsStreamProcessor {
                 }
                 ((ObjectNode) root).put("timestamp", timestampStr);
                 return mapper.writeValueAsString(root);
+            } catch (Exception e) {
+                return raw;
+            }
+        }).mapValues(raw -> {
+            try {
+                // add protocol
+                String unescaped = mapper.readValue(raw, String.class);
+                JsonNode root = mapper.readTree(unescaped); // Parse JSON  
+
+                // Extract fields
+                String dst_port = root.get("dst_port").asText();
+                String protocol = "";
+
+                if (dst_port.equals("21")) {
+                    protocol = "FTP";
+                } else if (dst_port.equals("42")) {
+                    protocol = "Host Name Server";
+                } else if (dst_port.equals("69")) {
+                    protocol = "TFTP";
+                } else if (dst_port.equals("80")) {
+                    protocol = "HTTP";
+                } else if (dst_port.equals("135")) {
+                    protocol = "DCE/RPC Endpoint Mapper";
+                } else if (dst_port.equals("443")) {
+                    protocol = "HTTPS";
+                } else if (dst_port.equals("445")) {
+                    protocol = "SMB";
+                } else if (dst_port.equals("1433")) {
+                    protocol = "MSSQL";
+                } else if (dst_port.equals("1723")) {
+                    protocol = "PPTP";
+                } else if (dst_port.equals("1883")) {
+                    protocol = "MQTT";
+                } else if (dst_port.equals("3306")) {
+                    protocol = "MySQL";
+                } else if (dst_port.equals("5060")) {
+                    protocol = "SIP";
+                } else if (dst_port.equals("5061")) {
+                    protocol = "SIPS";
+                } else if (dst_port.equals("11211")) {
+                    protocol = "MEMCACHED";
+                } else {
+                    protocol = "UNKNOWN";
+                }
+
+                // Add fields
+                ((ObjectNode) root).put("protocol", protocol);
+
+                return mapper.writeValueAsString(root); // Serialize back to string
             } catch (Exception e) {
                 return raw;
             }

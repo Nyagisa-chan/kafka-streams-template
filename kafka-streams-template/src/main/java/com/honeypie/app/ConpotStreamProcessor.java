@@ -99,6 +99,22 @@ public class ConpotStreamProcessor {
             } catch (Exception e) {
                 return raw;
             }
+        }).mapValues(raw -> {
+            try {
+                // add protocol
+                String unescaped = mapper.readValue(raw, String.class);
+                JsonNode root = mapper.readTree(unescaped); // Parse JSON  
+
+                // Extract fields
+                String protocol = "conpot";
+
+                // Add fields
+                ((ObjectNode) root).put("protocol", protocol);
+
+                return mapper.writeValueAsString(root); // Serialize back to string
+            } catch (Exception e) {
+                return raw;
+            }
         }).to((key, value, recordContext) -> hasValidSrcIp(value) ? OUTPUT_TOPIC : FILTER_TOPIC);
 
 

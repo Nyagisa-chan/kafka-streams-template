@@ -21,7 +21,10 @@ public class HoneytrapStreamProcessor {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(raw);
             String category = root.get("category").asText();
-            return category != null && !category.isEmpty() && !category.equals("heartbeat");
+            String protocol = root.get("protocol").asText();
+            boolean isValidCategory = category != null && !category.isEmpty() && !category.equals("heartbeat");
+            boolean isValidProtocol = protocol != null && !protocol.isEmpty() && !protocol.equals("heartbeat");
+            return isValidCategory && isValidProtocol;
         } catch (Exception e) {
             return false;
         }
@@ -70,18 +73,21 @@ public class HoneytrapStreamProcessor {
                 String dstPort = root.get("destination-port").asText();
                 String srcIp = root.get("source-ip").asText();
                 String srcPort = root.get("source-port").asText();
+                String category = root.get("category").asText();
 
                 // Add fields
                 ((ObjectNode) root).put("dst_ip", dstIp);
                 ((ObjectNode) root).put("dst_port", dstPort);
                 ((ObjectNode) root).put("src_ip", srcIp);
                 ((ObjectNode) root).put("src_port", srcPort);
+                ((ObjectNode) root).put("protocol", category);
 
                 // Remove fields
                 ((ObjectNode) root).remove("destination-ip");
                 ((ObjectNode) root).remove("destination-port");
                 ((ObjectNode) root).remove("source-ip");
                 ((ObjectNode) root).remove("source-port");
+                ((ObjectNode) root).remove("category");
 
                 return mapper.writeValueAsString(root); // Serialize back to string
             } catch (Exception e) {
