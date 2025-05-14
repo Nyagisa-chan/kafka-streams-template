@@ -12,16 +12,7 @@
     "output.format.value": "json",
     "output.schema.infer.value": "true",
     "pipeline":
-        "[{\"$match\":{
-          \"operationType\":\"insert\"}},
-        {\"$addFields\":{
-          \"fullDocument.dst_ip\": \"1.1.1.1\",
-          \"fullDocument.src_ip\": \"$fullDocument.ip_address\",
-          \"fullDocument.dst_port\": \"3389\",
-          \"fullDocument.src_port\": \"$fullDocument.source_port\"}},
-        {\"$project\": {
-          \"fullDocument.ip_address\":0,
-          \"fullDocument.source_port\":0}}]",
+        "[{\"$match\":{\"operationType\":\"insert\"}},{\"$addFields\":{\"fullDocument.protocol\": \"rdp\",\"fullDocument.dst_ip\": \"1.1.1.1\",\"fullDocument.src_ip\": \"$fullDocument.ip_address\",\"fullDocument.dst_port\": \"3389\",\"fullDocument.src_port\": \"$fullDocument.source_port\"}},{\"$project\": {\"fullDocument.ip_address\":0,\"fullDocument.source_port\":0}}]",
     "producer.override.max.request.size": "10485760"
   }
 }

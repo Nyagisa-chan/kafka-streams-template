@@ -10,15 +10,7 @@
     "publish.full.document.only": "true",
     "topic.prefix": "input",
     "output.format.value": "json",
-    "pipeline":
-        "[{\"$match\":{
-          \"operationType\":\"insert\"}},
-        {\"$addFields\":{
-          \"fullDocument.dst_ip\": \"$fullDocument.dest_ip\",
-          \"fullDocument.dst_port\": \"$fullDocument.dest_port\"}},
-        {\"$project\": {
-          \"fullDocument.dest_ip\":0,
-          \"fullDocument.dest_port\":0}}]",
+    "pipeline": "[{\"$match\":{\"operationType\":\"insert\"}},{\"$addFields\":{\"fullDocument.protocol\": \"conpot\",\"fullDocument.dst_ip\": \"$fullDocument.dest_ip\",\"fullDocument.dst_port\": \"$fullDocument.dest_port\"}},{\"$project\":{\"fullDocument.dest_ip\":0, \"fullDocument.dest_port\":0}}]",
     "producer.override.max.request.size": "10485760"
   }
 }

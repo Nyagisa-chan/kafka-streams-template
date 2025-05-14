@@ -10,7 +10,7 @@
     "publish.full.document.only": "true",
     "topic.prefix": "input",
     "output.format.value": "json",
-    "pipeline": "[{\"$match\": {\"operationType\": \"insert\"}}]",
+    "pipeline":"[{\"$match\":{\"operationType\":\"insert\"}},{\"$addFields\":{\"fullDocument.protocol\": \"$fullDocument.connection.protocol\"}}]",
     "producer.override.max.request.size": "10485760"
   }
 }

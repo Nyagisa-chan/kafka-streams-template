@@ -17,16 +17,17 @@ public class DionaeaEwsStreamProcessor {
     static String OUTPUT_TOPIC = "output.honeypot.dionaea_ews";
     static String FILTER_TOPIC = "filter-topic";
    
-    private static boolean hasValidSrcIp(String raw) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(raw);
-            String srcIp = root.get("src_ip").asText();
-            return srcIp != null && !srcIp.isEmpty();
-        } catch (Exception e) {
-            return false;
-        }
-    }
+    // # to apply filter on src_ip
+    // private static boolean hasValidSrcIp(String raw) {
+    //     try {
+    //         ObjectMapper mapper = new ObjectMapper();
+    //         JsonNode root = mapper.readTree(raw);
+    //         String srcIp = root.get("src_ip").asText();
+    //         return srcIp != null && !srcIp.isEmpty();
+    //     } catch (Exception e) {
+    //         return false;
+    //     }
+    // }
 
 
     public static void main(String[] args) {
@@ -103,43 +104,42 @@ public class DionaeaEwsStreamProcessor {
         }).mapValues(raw -> {
             try {
                 // add protocol
-                String unescaped = mapper.readValue(raw, String.class);
-                JsonNode root = mapper.readTree(unescaped); // Parse JSON  
+                JsonNode root = mapper.readTree(raw); // Parse JSON  
 
                 // Extract fields
                 String dst_port = root.get("dst_port").asText();
                 String protocol = "";
 
                 if (dst_port.equals("21")) {
-                    protocol = "FTP";
+                    protocol = "ftp";
                 } else if (dst_port.equals("42")) {
-                    protocol = "Host Name Server";
+                    protocol = "host name server";
                 } else if (dst_port.equals("69")) {
-                    protocol = "TFTP";
+                    protocol = "tftp";
                 } else if (dst_port.equals("80")) {
-                    protocol = "HTTP";
+                    protocol = "http";
                 } else if (dst_port.equals("135")) {
-                    protocol = "DCE/RPC Endpoint Mapper";
+                    protocol = "dce/rpc endpoint mapper";
                 } else if (dst_port.equals("443")) {
-                    protocol = "HTTPS";
+                    protocol = "https";
                 } else if (dst_port.equals("445")) {
-                    protocol = "SMB";
+                    protocol = "smb";
                 } else if (dst_port.equals("1433")) {
-                    protocol = "MSSQL";
+                    protocol = "mssql";
                 } else if (dst_port.equals("1723")) {
-                    protocol = "PPTP";
+                    protocol = "pptp";
                 } else if (dst_port.equals("1883")) {
-                    protocol = "MQTT";
+                    protocol = "mqtt";
                 } else if (dst_port.equals("3306")) {
-                    protocol = "MySQL";
+                    protocol = "mysql";
                 } else if (dst_port.equals("5060")) {
-                    protocol = "SIP";
+                    protocol = "sip";
                 } else if (dst_port.equals("5061")) {
-                    protocol = "SIPS";
+                    protocol = "sips";
                 } else if (dst_port.equals("11211")) {
-                    protocol = "MEMCACHED";
+                    protocol = "memcached";
                 } else {
-                    protocol = "UNKNOWN";
+                    protocol = "unknown";
                 }
 
                 // Add fields
@@ -149,7 +149,10 @@ public class DionaeaEwsStreamProcessor {
             } catch (Exception e) {
                 return raw;
             }
-        }).to((key, value, recordContext) -> hasValidSrcIp(value) ? OUTPUT_TOPIC : FILTER_TOPIC);
+        }).to(OUTPUT_TOPIC); // Write to output topic
+
+        // # to apply filter on src_ip
+        // .to((key, value, recordContext) -> hasValidSrcIp(value) ? OUTPUT_TOPIC : FILTER_TOPIC);
 
 
         // 3. Start Streams

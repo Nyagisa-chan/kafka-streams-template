@@ -16,16 +16,17 @@ public class CowrieStreamProcessor {
     static String OUTPUT_TOPIC = "output.honeypot.cowrie";
     static String FILTER_TOPIC = "filter-topic";
    
-    private static boolean hasValidSrcIp(String raw) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(raw);
-            String srcIp = root.get("src_ip").asText();
-            return srcIp != null && !srcIp.isEmpty();
-        } catch (Exception e) {
-            return false;
-        }
-    }
+    // # to apply filter on src_ip
+    // private static boolean hasValidSrcIp(String raw) {
+    //     try {
+    //         ObjectMapper mapper = new ObjectMapper();
+    //         JsonNode root = mapper.readTree(raw);
+    //         String srcIp = root.get("src_ip").asText();
+    //         return srcIp != null && !srcIp.isEmpty();
+    //     } catch (Exception e) {
+    //         return false;
+    //     }
+    // }
 
 
     public static void main(String[] args) {
@@ -99,7 +100,10 @@ public class CowrieStreamProcessor {
             } catch (Exception e) {
                 return raw;
             }
-        }).to((key, value, recordContext) -> hasValidSrcIp(value) ? OUTPUT_TOPIC : FILTER_TOPIC);
+        }).to(OUTPUT_TOPIC); // Write to output topic
+
+        // # to apply filter on src_ip
+        // .to((key, value, recordContext) -> hasValidSrcIp(value) ? OUTPUT_TOPIC : FILTER_TOPIC);
 
 
         // 3. Start Streams

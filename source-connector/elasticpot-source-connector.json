@@ -11,19 +11,7 @@
     "topic.prefix": "input",
     "output.format.value": "json",
     "output.schema.infer.value": "true",
-    "pipeline":
-        "[{\"$match\":{
-          \"operationType\":\"insert\"}},
-        {\"$addFields\":{
-          \"fullDocument.dst_ip\": \"$fullDocument.target_address\",
-          \"fullDocument.src_ip\": \"$fullDocument.source_address\",
-          \"fullDocument.dst_port\": \"$fullDocument.target_port\",
-          \"fullDocument.src_port\": \"$fullDocument.source_port\"}},
-        {\"$project\": {
-          \"fullDocument.target_address\":0,
-          \"fullDocument.source_address\":0,
-          \"fullDocument.target_port\":0,
-          \"fullDocument.source_port\":0}}]",
+    "pipeline": "[{\"$match\":{\"operationType\":\"insert\"}},{\"$addFields\":{\"fullDocument.protocol\": \"elasticsearch\",\"fullDocument.dst_ip\": \"$fullDocument.target_address\",\"fullDocument.src_ip\": \"$fullDocument.source_address\",\"fullDocument.dst_port\": \"$fullDocument.target_port\",\"fullDocument.src_port\": \"$fullDocument.source_port\"}},{\"$project\": {\"fullDocument.target_address\":0,\"fullDocument.source_address\":0,\"fullDocument.target_port\":0,\"fullDocument.source_port\":0}}]",
     "producer.override.max.request.size": "10485760"
   }
 }

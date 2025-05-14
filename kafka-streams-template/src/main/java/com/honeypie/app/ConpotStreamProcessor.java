@@ -16,16 +16,17 @@ public class ConpotStreamProcessor {
     static String OUTPUT_TOPIC = "output.honeypot.conpot";
     static String FILTER_TOPIC = "filter-topic";
    
-    private static boolean hasValidSrcIp(String raw) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(raw);
-            String srcIp = root.get("src_ip").asText();
-            return srcIp != null && !srcIp.isEmpty();
-        } catch (Exception e) {
-            return false;
-        }
-    }
+    // # to apply filter on src_ip
+    // private static boolean hasValidSrcIp(String raw) {
+    //     try {
+    //         ObjectMapper mapper = new ObjectMapper();
+    //         JsonNode root = mapper.readTree(raw);
+    //         String srcIp = root.get("src_ip").asText();
+    //         return srcIp != null && !srcIp.isEmpty();
+    //     } catch (Exception e) {
+    //         return false;
+    //     }
+    // }
 
 
     public static void main(String[] args) {
@@ -102,11 +103,33 @@ public class ConpotStreamProcessor {
         }).mapValues(raw -> {
             try {
                 // add protocol
-                String unescaped = mapper.readValue(raw, String.class);
-                JsonNode root = mapper.readTree(unescaped); // Parse JSON  
+                JsonNode root = mapper.readTree(raw); // Parse JSON  
 
                 // Extract fields
-                String protocol = "conpot";
+                String dst_port = root.get("dst_port").asText();
+                String protocol = "";
+
+                if (dst_port.equals("2121")) {
+                    protocol = "ftp";
+                } else if (dst_port.equals("5020")) {
+                    protocol = "modbus";
+                } else if (dst_port.equals("6230")) {
+                    protocol = "ipmi";
+                } else if (dst_port.equals("6969")) {
+                    protocol = "tftp";
+                } else if (dst_port.equals("8800")) {
+                    protocol = "http";
+                } else if (dst_port.equals("10201")) {
+                    protocol = "s7comm";
+                } else if (dst_port.equals("16100")) {
+                    protocol = "snmp";
+                } else if (dst_port.equals("47808")) {
+                    protocol = "bacnet";
+                } else if (dst_port.equals("44818")) {
+                    protocol = "enip";
+                } else {
+                    protocol = "unknown";
+                }
 
                 // Add fields
                 ((ObjectNode) root).put("protocol", protocol);
@@ -115,7 +138,10 @@ public class ConpotStreamProcessor {
             } catch (Exception e) {
                 return raw;
             }
-        }).to((key, value, recordContext) -> hasValidSrcIp(value) ? OUTPUT_TOPIC : FILTER_TOPIC);
+        }).to(OUTPUT_TOPIC); // Write to output topic
+
+        // # to apply filter on src_ip
+        // .to((key, value, recordContext) -> hasValidSrcIp(value) ? OUTPUT_TOPIC : FILTER_TOPIC);
 
 
         // 3. Start Streams
