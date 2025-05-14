@@ -11,7 +11,7 @@
     "topic.prefix": "input",
     "output.format.value": "json",
     "output.schema.infer.value": "true",
-    "pipeline": "[{\"$match\":{\"operationType\":\"insert\"}},{\"$addFields\":{\"fullDocument.protocol\": \"$fullDocument.category\",\"fullDocument.dst_ip\": \"$fullDocument.destination-ip\",\"fullDocument.src_ip\": \"$fullDocument.source-ip\",\"fullDocument.dst_port\": \"$fullDocument.destination-port\",\"fullDocument.src_port\": \"$fullDocument.source-port\"}},{\"$project\": {\"fullDocument.source-ip\":0,\"fullDocument.destination-ip\":0,\"fullDocument.source-port\":0,\"fullDocument.destination-port\":0,\"fullDocument.protocol\":0}}]",
+    "pipeline": "[{\"$match\":{\"operationType\":\"insert\"}},{\"$addFields\":{\"fullDocument.protocol\": \"$fullDocument.category\",\"fullDocument.dst_ip\": \"$fullDocument.destination-ip\",\"fullDocument.src_ip\": \"$fullDocument.source-ip\",\"fullDocument.dst_port\": \"$fullDocument.destination-port\",\"fullDocument.src_port\": \"$fullDocument.source-port\"}},{\"$project\": {\"fullDocument.source-ip\":0,\"fullDocument.destination-ip\":0,\"fullDocument.source-port\":0,\"fullDocument.destination-port\":0,\"fullDocument.category\":0}}]",
     "producer.override.max.request.size": "10485760"
   }
 }
